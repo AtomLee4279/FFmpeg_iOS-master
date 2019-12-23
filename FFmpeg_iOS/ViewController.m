@@ -297,6 +297,15 @@
     [backgroundTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, backgroundAudio.duration)
                                         ofTrack:[audioTracks firstObject]
                                          atTime:kCMTimeZero error:nil];
+    
+    AVMutableCompositionTrack *backgroundTrack2 =
+    [mixComposition addMutableTrackWithMediaType:AVMediaTypeAudio
+                           preferredTrackID:kCMPersistentTrackID_Invalid];
+    NSArray *audioTracks2 = [backgroundAudio2 tracksWithMediaType:AVMediaTypeAudio];
+    [backgroundTrack2 insertTimeRange:CMTimeRangeMake(kCMTimeZero, backgroundAudio.duration)
+                                        ofTrack:[audioTracks2 firstObject]
+                                         atTime:kCMTimeZero error:nil];
+    
     AVMutableCompositionTrack *compositionVideoTrack = [mixComposition addMutableTrackWithMediaType:AVMediaTypeVideo
                                                                                        preferredTrackID:kCMPersistentTrackID_Invalid];
     NSArray *videoTracks = [videoAsset tracksWithMediaType:AVMediaTypeVideo];
