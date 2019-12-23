@@ -12,7 +12,9 @@
 #import "CustomVideoBgView.h"
 @interface ViewController ()
 
-@property (strong,nonatomic) AVPlayer *videoPlayer;
+@property (strong,nonatomic) AVPlayer *inputVideoPlayer;
+
+@property (strong,nonatomic) AVPlayer *outputVideoPlayer;
 
 @property (strong,nonatomic) AVAudioPlayer *audioPlayer;
 
@@ -112,15 +114,15 @@
 //初始化输入播放源
 -(void)initInputVideoPlayer{
     
-    NSString *path = [[NSBundle mainBundle]pathForResource:@"input.mp4" ofType:nil];
+    NSString *path = [[NSBundle mainBundle]pathForResource:@"input.MOV" ofType:nil];
     //为即将播放的视频内容进行建模
         AVPlayerItem *avplayerItem = [[AVPlayerItem alloc] initWithURL:[NSURL fileURLWithPath:path]];
     //创建监听（这是一种KOV的监听模式）
         [avplayerItem addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:nil];
         //给播放器赋值要播放的对象模型
-        self.videoPlayer = [AVPlayer playerWithPlayerItem:avplayerItem];
+        self.inputVideoPlayer = [AVPlayer playerWithPlayerItem:avplayerItem];
      // 将player输出到显示动画层playerLayer
-       [(AVPlayerLayer *)self.inputVideoView.layer setPlayer:self.videoPlayer];
+       [(AVPlayerLayer *)self.inputVideoView.layer setPlayer:self.inputVideoPlayer];
     
 //    [self.inputVideoPlayerSlider addTarget:self action:@selector(sliderValueChange:) forControlEvents:UIControlEventValueChanged];
     
@@ -142,9 +144,9 @@
     //创建监听（这是一种KOV的监听模式）
         [avplayerItem addObserver:self forKeyPath:@"OutputStatus" options:NSKeyValueObservingOptionNew context:nil];
         //给播放器赋值要播放的对象模型
-        self.videoPlayer = [AVPlayer playerWithPlayerItem:avplayerItem];
+        self.outputVideoPlayer = [AVPlayer playerWithPlayerItem:avplayerItem];
      // 将player输出到显示动画层playerLayer
-       [(AVPlayerLayer *)self.outputVideoView.layer setPlayer:self.videoPlayer];
+       [(AVPlayerLayer *)self.outputVideoView.layer setPlayer:self.outputVideoPlayer];
 }
 
 //播放状态监听
@@ -188,16 +190,16 @@
     [self.audioPlayer pause];
     sender.selected = !sender.selected;
     if (sender.selected) {
-        [self.videoPlayer play];
+        [self.inputVideoPlayer play];
     }else{
-        [self.videoPlayer pause];
+        [self.inputVideoPlayer pause];
     }
 }
 
 //播放音频源
 - (IBAction)actInputAudioButtonTouched:(UIButton*)sender {
     
-    [self.videoPlayer pause];
+    [self.inputVideoPlayer pause];
     sender.selected = !sender.selected;
     if (sender.selected) {
         [self.audioPlayer play];
@@ -220,9 +222,9 @@
     [self.audioPlayer pause];
     sender.selected = !sender.selected;
     if (sender.selected) {
-        [self.videoPlayer play];
+        [self.outputVideoPlayer play];
     }else{
-        [self.videoPlayer pause];
+        [self.outputVideoPlayer pause];
     }
     
 }
@@ -231,11 +233,11 @@
 
 -(void)countInputVideoCurrentTime{
     
-    float current = CMTimeGetSeconds([self.videoPlayer currentTime]);
+    float current = CMTimeGetSeconds([self.inputVideoPlayer currentTime]);
     NSInteger min = current/60;
     NSInteger sec = (NSInteger)current%60;
     NSString *currentTime = [NSString stringWithFormat:@"%02ld:%02ld",min,sec];
-    float total = CMTimeGetSeconds(self.videoPlayer.currentItem.duration);
+    float total = CMTimeGetSeconds(self.inputVideoPlayer.currentItem.duration);
     CGFloat sliderValue = current / total;
     self.inputVideoTimeLabel.text = currentTime;
     self.inputVideoPlayerSlider.value = sliderValue;
@@ -244,14 +246,14 @@
 
 -(void)countOutputVideoCurrentTime{
     
-    float current = CMTimeGetSeconds([self.videoPlayer currentTime]);
+    float current = CMTimeGetSeconds([self.outputVideoPlayer currentTime]);
     NSInteger min = current/60;
     NSInteger sec = (NSInteger)current%60;
     NSString *currentTime = [NSString stringWithFormat:@"%02ld:%02ld",min,sec];
-    float total = CMTimeGetSeconds(self.videoPlayer.currentItem.duration);
+    float total = CMTimeGetSeconds(self.outputVideoPlayer.currentItem.duration);
     CGFloat sliderValue = current / total;
-    self.inputVideoTimeLabel.text = currentTime;
-    self.inputVideoPlayerSlider.value = sliderValue;
+    self.outputTimeLabel.text = currentTime;
+    self.outputSlider.value = sliderValue;
     self.outputTimeLabel.text = currentTime;
     self.outputSlider.value = sliderValue;
 }
@@ -281,10 +283,11 @@
 //使用系统自带框架合成视频/音频
 -(void)combineVideoAndAudio{
     
-    NSString *videoPath = [[NSBundle mainBundle]pathForResource:@"input.mp4" ofType:nil];
+    NSString *videoPath = [[NSBundle mainBundle]pathForResource:@"input.MOV" ofType:nil];
     AVURLAsset* videoAsset = [[AVURLAsset alloc]initWithURL:[NSURL fileURLWithPath:videoPath] options:nil];
     NSString *audioPath = [[NSBundle mainBundle]pathForResource:@"birth.m4a" ofType:nil];
     AVURLAsset *backgroundAudio = [[AVURLAsset alloc] initWithURL:[NSURL fileURLWithPath:audioPath] options:nil];
+    AVURLAsset *backgroundAudio2 = [[AVURLAsset alloc] initWithURL:[NSURL fileURLWithPath:videoPath] options:nil];
     
     AVMutableComposition *mixComposition = [AVMutableComposition composition];
     AVMutableCompositionTrack *backgroundTrack =
@@ -340,6 +343,7 @@
              NSLog(@"%@",assetExport.outputURL);
             dispatch_async(dispatch_get_main_queue(), ^{
                 self.outputPlayerButton.userInteractionEnabled = YES;
+                self->_videoTimer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(countOutputVideoCurrentTime) userInfo:nil repeats:YES];
                 [self initOutputVideoPlayer];
             });
             
@@ -354,7 +358,8 @@
 
 -(void)videoPlayEnd{
     
-    [self.videoPlayer.currentItem seekToTime:kCMTimeZero];
+    [self.inputVideoPlayer.currentItem seekToTime:kCMTimeZero];
+    [self.outputVideoPlayer.currentItem seekToTime:kCMTimeZero];
 }
 
 @end
