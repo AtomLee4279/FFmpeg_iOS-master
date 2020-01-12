@@ -10,6 +10,9 @@
 #import "ffmpeg.h"
 #import <AVKit/AVKit.h>
 #import "CustomVideoBgView.h"
+#define INPUT_VIDEO @"input.mp4"
+
+
 @interface ViewController ()
 
 @property (strong,nonatomic) AVPlayer *inputVideoPlayer;
@@ -51,9 +54,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(videoPlayEnd) name:AVPlayerItemDidPlayToEndTimeNotification object:nil];
-    [self initInputVideoPlayer];
-    [self initInputAudioPlayer];
-//    [self normalRun2];
+//    [self initInputVideoPlayer];
+//    [self initInputAudioPlayer];
+    [self normalRun2];
     
 
 }
@@ -84,7 +87,7 @@
 
 - (void)normalRun2{
     
-    NSString *video = [[NSBundle mainBundle]pathForResource:@"input.mp4" ofType:nil];
+    NSString *video = [[NSBundle mainBundle]pathForResource:INPUT_VIDEO ofType:nil];
     NSString *audio   = [[NSBundle mainBundle]pathForResource:@"birth.m4a" ofType:nil];
     //ffmpeg -i foo.mp3 -itsoffset 60 -i blah.mpeg -acodec copy -vcodec copy -copyts out.mkv
 
@@ -114,7 +117,7 @@
 //初始化输入播放源
 -(void)initInputVideoPlayer{
     
-    NSString *path = [[NSBundle mainBundle]pathForResource:@"input.MOV" ofType:nil];
+    NSString *path = [[NSBundle mainBundle]pathForResource:INPUT_VIDEO ofType:nil];
     //为即将播放的视频内容进行建模
         AVPlayerItem *avplayerItem = [[AVPlayerItem alloc] initWithURL:[NSURL fileURLWithPath:path]];
     //创建监听（这是一种KOV的监听模式）
@@ -283,7 +286,7 @@
 //使用系统自带框架合成视频/音频
 -(void)combineVideoAndAudio{
     
-    NSString *videoPath = [[NSBundle mainBundle]pathForResource:@"input.MOV" ofType:nil];
+    NSString *videoPath = [[NSBundle mainBundle]pathForResource:INPUT_VIDEO ofType:nil];
     AVURLAsset* videoAsset = [[AVURLAsset alloc]initWithURL:[NSURL fileURLWithPath:videoPath] options:nil];
     NSString *audioPath = [[NSBundle mainBundle]pathForResource:@"birth.m4a" ofType:nil];
     AVURLAsset *backgroundAudio = [[AVURLAsset alloc] initWithURL:[NSURL fileURLWithPath:audioPath] options:nil];

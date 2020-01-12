@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		0400FCDC23B068B5002A8834 /* birth.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 0400FCDA23B05AB2002A8834 /* birth.m4a */; };
 		0400FCDF23B08354002A8834 /* CustomVideoBgView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0400FCDE23B08354002A8834 /* CustomVideoBgView.m */; };
-		676C135D23B10A65000A9BC3 /* input.MOV in Resources */ = {isa = PBXBuildFile; fileRef = 676C135C23B10A65000A9BC3 /* input.MOV */; };
+		675A3D4823CAB2C200450355 /* input.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 675A3D4723CAB2B800450355 /* input.mp4 */; };
 		A65652DC21C524C3007C44B2 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A65652DB21C524C3007C44B2 /* AppDelegate.m */; };
 		A65652DF21C524C3007C44B2 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A65652DE21C524C3007C44B2 /* ViewController.m */; };
 		A65652E221C524C3007C44B2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A65652E021C524C3007C44B2 /* Main.storyboard */; };
@@ -39,7 +39,7 @@
 		0400FCDA23B05AB2002A8834 /* birth.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = birth.m4a; sourceTree = "<group>"; };
 		0400FCDD23B08354002A8834 /* CustomVideoBgView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CustomVideoBgView.h; sourceTree = "<group>"; };
 		0400FCDE23B08354002A8834 /* CustomVideoBgView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CustomVideoBgView.m; sourceTree = "<group>"; };
-		676C135C23B10A65000A9BC3 /* input.MOV */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = input.MOV; sourceTree = "<group>"; };
+		675A3D4723CAB2B800450355 /* input.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = input.mp4; sourceTree = "<group>"; };
 		A65652D721C524C3007C44B2 /* FFmpeg_iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FFmpeg_iOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A65652DA21C524C3007C44B2 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		A65652DB21C524C3007C44B2 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -222,7 +222,7 @@
 		A65652D921C524C3007C44B2 /* FFmpeg_iOS */ = {
 			isa = PBXGroup;
 			children = (
-				676C135C23B10A65000A9BC3 /* input.MOV */,
+				675A3D4723CAB2B800450355 /* input.mp4 */,
 				0400FCDA23B05AB2002A8834 /* birth.m4a */,
 				A64D9AA821C643890002DCEA /* FFmpeg */,
 				A65652DA21C524C3007C44B2 /* AppDelegate.h */,
@@ -497,9 +497,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				675A3D4823CAB2C200450355 /* input.mp4 in Resources */,
 				0400FCDC23B068B5002A8834 /* birth.m4a in Resources */,
 				A65652E721C524C3007C44B2 /* LaunchScreen.storyboard in Resources */,
-				676C135D23B10A65000A9BC3 /* input.MOV in Resources */,
 				A65652E421C524C3007C44B2 /* Assets.xcassets in Resources */,
 				A65652E221C524C3007C44B2 /* Main.storyboard in Resources */,
 			);
