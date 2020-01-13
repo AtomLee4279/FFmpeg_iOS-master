@@ -9,6 +9,9 @@
 #import "ViewController.h"
 #import "ffmpeg.h"
 #import <AVKit/AVKit.h>
+#import <AVFoundation/AVFoundation.h>
+#import <CoreServices/CoreServices.h>
+#import <Photos/Photos.h>
 #import "CustomVideoBgView.h"
 #define INPUT_VIDEO @"input.mp4"
 
@@ -54,9 +57,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(videoPlayEnd) name:AVPlayerItemDidPlayToEndTimeNotification object:nil];
-//    [self initInputVideoPlayer];
-//    [self initInputAudioPlayer];
-    [self normalRun2];
+    [self initInputVideoPlayer];
+    [self initInputAudioPlayer];
+//    [self normalRun2];
     
 
 }
@@ -343,12 +346,11 @@
         for (NSString *supportFileType in assetExport.supportedFileTypes) {
             NSLog(@"%@",supportFileType);
         }
-        
-        assetExport.outputFileType = @"com.apple.quicktime-movie";//@"public.mpeg-4";
+
+        assetExport.outputFileType = AVFileTypeQuickTimeMovie;
         NSLog(@"file type %@",assetExport.outputFileType);
         assetExport.outputURL = [NSURL fileURLWithPath:self.outputPath];
         assetExport.shouldOptimizeForNetworkUse = YES;
-
         [assetExport exportAsynchronouslyWithCompletionHandler:
          ^(void ) {
              // your completion code here
@@ -357,11 +359,31 @@
                 self.outputPlayerButton.userInteractionEnabled = YES;
                 self->_videoTimer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(countOutputVideoCurrentTime) userInfo:nil repeats:YES];
                 [self initOutputVideoPlayer];
+                //保存到相册
+                [self addNewAssetWithVideoUrl:[NSURL fileURLWithPath:self.outputPath]];
             });
-            
+
 
          }
          ];
+    
+}
+
+//保存视频到相册
+- (void) addNewAssetWithVideoUrl:(NSURL*)videoURL
+{
+    [[PHPhotoLibrary sharedPhotoLibrary] performChanges:^{
+        // Request creating an asset from the image.
+        PHAssetChangeRequest* createAssetRequest = [PHAssetChangeRequest creationRequestForAssetFromVideoAtFileURL:videoURL];
+        PHFetchResult *album = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeAlbum subtype:PHAssetCollectionSubtypeAlbumRegular options:nil];
+         // Request editing the album.
+        PHAssetCollectionChangeRequest* albumChangeRequest = [PHAssetCollectionChangeRequest changeRequestForAssetCollection:album.firstObject];
+         // Get a placeholder for the new asset and add it to the album editing request.
+        PHObjectPlaceholder* assetPlaceholder = [createAssetRequest placeholderForCreatedAsset];
+        [albumChangeRequest addAssets:@[ assetPlaceholder ]];
+     } completionHandler:^(BOOL success, NSError* error) {
+        NSLog(@"Finished adding asset. %@", (success ? @"Success" : error));
+    }];
 }
 
 
