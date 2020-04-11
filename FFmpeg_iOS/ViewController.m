@@ -13,8 +13,18 @@
 #import <CoreServices/CoreServices.h>
 #import <Photos/Photos.h>
 #import "CustomVideoBgView.h"
+#import "CDPAudioRecorder.h"
+#import "CombineAudioAndVideoTool.h"
+
 #define INPUT_VIDEO @"input.mp4"
 
+@interface ViewController () <CDPAudioRecorderDelegate>{
+    
+    CDPAudioRecorder *_recorder;//recorder对象
+    NSTimer *_timer;//计时器,用于录音倒计时
+}
+
+@end
 
 @interface ViewController ()
 
@@ -49,6 +59,9 @@
 @property (weak, nonatomic) IBOutlet CustomVideoBgView *outputVideoView;
 
 
+@property (weak, nonatomic) IBOutlet UIButton *recorderBtn;
+
+
 @end
 @implementation ViewController{
     NSTimer *_videoTimer;
@@ -59,9 +72,17 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(videoPlayEnd) name:AVPlayerItemDidPlayToEndTimeNotification object:nil];
     [self initInputVideoPlayer];
     [self initInputAudioPlayer];
+    [self initRecorder];
 //    [self normalRun2];
     
 
+}
+
+-(void)dealloc{
+    //结束播放
+    [_recorder stopPlaying];
+    //结束录音
+    [_recorder stopRecording];
 }
 
 #pragma mark -FFmpeg Caller -
@@ -155,6 +176,14 @@
        [(AVPlayerLayer *)self.outputVideoView.layer setPlayer:self.outputVideoPlayer];
 }
 
+//初始化录音类
+-(void)initRecorder{
+    //详情请看CDPAudioRecorder.h文件
+    //初始化录音recorder
+    _recorder=[CDPAudioRecorder shareRecorder];
+    _recorder.delegate=self;
+}
+
 //播放状态监听
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context{
     
@@ -221,6 +250,29 @@
     [self combineVideoAndAudio];
     
 }
+
+//录音合成到原视频
+- (IBAction)actCombineVideoFromAudioRecorder:(id)sender {
+    
+    [self.recorderBtn setTitle:@"录音倒计时:10秒" forState:UIControlStateNormal];
+    [_recorder startRecording];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(10.f * NSEC_PER_SEC)), dispatch_get_global_queue(0, 0), ^{
+        [self->_recorder stopRecording];
+        //停止录音之后更新UI/合成到视频源等
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (self->_recorder.recordURL) {
+                
+            }
+        });
+    });
+    
+}
+
+-(void)createTimer{
+  
+
+}
+
 
 //播放合成后的视频
 - (IBAction)actPlayOutputButtonTouched:(UIButton*)sender {
@@ -289,35 +341,41 @@
 //使用系统自带框架合成视频/音频
 -(void)combineVideoAndAudio{
     
+//    NSString *videoPath = [[NSBundle mainBundle]pathForResource:INPUT_VIDEO ofType:nil];
+//    AVURLAsset* videoAsset = [[AVURLAsset alloc]initWithURL:[NSURL fileURLWithPath:videoPath] options:nil];
+//    NSString *audioPath = [[NSBundle mainBundle]pathForResource:@"birth.m4a" ofType:nil];
+//    AVURLAsset *backgroundAudio = [[AVURLAsset alloc] initWithURL:[NSURL fileURLWithPath:audioPath] options:nil];
+//    AVURLAsset *backgroundAudio2 = [[AVURLAsset alloc] initWithURL:[NSURL fileURLWithPath:videoPath] options:nil];
+//    AVMutableComposition *mixComposition = [AVMutableComposition composition];
+//    AVMutableCompositionTrack *backgroundTrack =
+//    [mixComposition addMutableTrackWithMediaType:AVMediaTypeAudio
+//                           preferredTrackID:kCMPersistentTrackID_Invalid];
+//    NSArray *audioTracks = [backgroundAudio tracksWithMediaType:AVMediaTypeAudio];
+//    [backgroundTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, backgroundAudio.duration)
+//                                        ofTrack:[audioTracks firstObject]
+//                                         atTime:kCMTimeZero error:nil];
+//
+//    AVMutableCompositionTrack *backgroundTrack2 =
+//    [mixComposition addMutableTrackWithMediaType:AVMediaTypeAudio
+//                           preferredTrackID:kCMPersistentTrackID_Invalid];
+//    NSArray *audioTracks2 = [backgroundAudio2 tracksWithMediaType:AVMediaTypeAudio];
+//    [backgroundTrack2 insertTimeRange:CMTimeRangeMake(kCMTimeZero, backgroundAudio.duration)
+//                                        ofTrack:[audioTracks2 firstObject]
+//                                         atTime:kCMTimeZero error:nil];
+//
+//    AVMutableCompositionTrack *compositionVideoTrack = [mixComposition addMutableTrackWithMediaType:AVMediaTypeVideo
+//                                                                                       preferredTrackID:kCMPersistentTrackID_Invalid];
+//    NSArray *videoTracks = [videoAsset tracksWithMediaType:AVMediaTypeVideo];
+//    [compositionVideoTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, videoAsset.duration)
+//                                       ofTrack:[videoTracks firstObject]
+//                                        atTime:kCMTimeZero error:nil];
     NSString *videoPath = [[NSBundle mainBundle]pathForResource:INPUT_VIDEO ofType:nil];
-    AVURLAsset* videoAsset = [[AVURLAsset alloc]initWithURL:[NSURL fileURLWithPath:videoPath] options:nil];
     NSString *audioPath = [[NSBundle mainBundle]pathForResource:@"birth.m4a" ofType:nil];
-    AVURLAsset *backgroundAudio = [[AVURLAsset alloc] initWithURL:[NSURL fileURLWithPath:audioPath] options:nil];
-    AVURLAsset *backgroundAudio2 = [[AVURLAsset alloc] initWithURL:[NSURL fileURLWithPath:videoPath] options:nil];
-    
-    AVMutableComposition *mixComposition = [AVMutableComposition composition];
-    AVMutableCompositionTrack *backgroundTrack =
-    [mixComposition addMutableTrackWithMediaType:AVMediaTypeAudio
-                           preferredTrackID:kCMPersistentTrackID_Invalid];
-    NSArray *audioTracks = [backgroundAudio tracksWithMediaType:AVMediaTypeAudio];
-    [backgroundTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, backgroundAudio.duration)
-                                        ofTrack:[audioTracks firstObject]
-                                         atTime:kCMTimeZero error:nil];
-    
-    AVMutableCompositionTrack *backgroundTrack2 =
-    [mixComposition addMutableTrackWithMediaType:AVMediaTypeAudio
-                           preferredTrackID:kCMPersistentTrackID_Invalid];
-    NSArray *audioTracks2 = [backgroundAudio2 tracksWithMediaType:AVMediaTypeAudio];
-    [backgroundTrack2 insertTimeRange:CMTimeRangeMake(kCMTimeZero, backgroundAudio.duration)
-                                        ofTrack:[audioTracks2 firstObject]
-                                         atTime:kCMTimeZero error:nil];
-    
-    AVMutableCompositionTrack *compositionVideoTrack = [mixComposition addMutableTrackWithMediaType:AVMediaTypeVideo
-                                                                                       preferredTrackID:kCMPersistentTrackID_Invalid];
-    NSArray *videoTracks = [videoAsset tracksWithMediaType:AVMediaTypeVideo];
-    [compositionVideoTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, videoAsset.duration)
-                                       ofTrack:[videoTracks firstObject]
-                                        atTime:kCMTimeZero error:nil];
+    Float64 seconds = 5;
+    int32_t preferredTimeScale = 600;
+    CMTime inTime = CMTimeMakeWithSeconds(seconds, preferredTimeScale);
+    CMTimeShow(inTime);
+    AVMutableComposition *mixComposition = [CombineAudioAndVideoTool combineOrginalVideo:videoPath WithAudio:audioPath atTime:inTime];
     [self outputProcessedVideoWithAsset:mixComposition];
 
 }
@@ -325,6 +383,7 @@
 //输出合成后的视频
 -(void)outputProcessedVideoWithAsset:(AVAsset*)compostion{
     
+    //先定一个缓存视频路径
     NSString *filePath = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES).firstObject;
     filePath = [filePath stringByAppendingPathComponent:@"user"];
     NSFileManager *manage = [NSFileManager defaultManager];
@@ -333,15 +392,17 @@
         filePath = [filePath stringByAppendingPathComponent:@"output.mp4"];
     }
     self.outputPath = filePath;
-    AVAssetExportSession *assetExport = [[AVAssetExportSession alloc]initWithAsset:compostion presetName:AVAssetExportPresetMediumQuality];
-    if ([[NSFileManager defaultManager] fileExistsAtPath:self.outputPath])
-        {
-            NSError *error;
-            [[NSFileManager defaultManager] removeItemAtPath:self.outputPath error:&error];
-            if (error) {
-                return;
-            }
+    //若该路径下存在文件，则先删除
+    if ([[NSFileManager defaultManager] fileExistsAtPath:self.outputPath]){
+        NSError *error;
+        [[NSFileManager defaultManager] removeItemAtPath:self.outputPath error:&error];
+        if (error) {
+            return;
         }
+    }
+    //开始导出
+    AVAssetExportSession *assetExport = [[AVAssetExportSession alloc]initWithAsset:compostion presetName:AVAssetExportPresetMediumQuality];
+    
 
         for (NSString *supportFileType in assetExport.supportedFileTypes) {
             NSLog(@"%@",supportFileType);

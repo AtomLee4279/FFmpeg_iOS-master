@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15510"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16086"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -103,14 +103,15 @@
                                 </constraints>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zMn-BI-82T">
-                                <rect key="frame" x="182" y="391" width="50" height="30"/>
+                                <rect key="frame" x="15" y="391" width="80" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="6jC-NV-y9a"/>
-                                    <constraint firstAttribute="width" constant="50" id="YWn-Oj-LyO"/>
+                                    <constraint firstAttribute="width" constant="80" id="YWn-Oj-LyO"/>
                                 </constraints>
-                                <state key="normal" title="合成"/>
+                                <state key="normal" title="合成音频源"/>
                                 <connections>
                                     <action selector="actCombineVedioAndAudio:" destination="BYZ-38-t0r" eventType="touchUpInside" id="rU4-Ck-3XR"/>
+                                    <action selector="actCombineVideoFromAudioRecorder:" destination="BYZ-38-t0r" eventType="touchUpInside" id="CDG-JY-o6z"/>
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="合成结果：" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dUN-Rg-Mvl" userLabel="outputTitleLabel">
@@ -156,15 +157,25 @@
                                     <constraint firstAttribute="height" constant="100" id="soe-1y-sfC"/>
                                 </constraints>
                             </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hGu-ao-eOZ">
+                                <rect key="frame" x="319" y="391" width="80" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="YfX-Q4-vJS"/>
+                                    <constraint firstAttribute="width" constant="80" id="heF-Ow-CtC"/>
+                                </constraints>
+                                <state key="normal" title="录音后合成"/>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="Ub1-NK-pc8" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="1eE-EK-nCk"/>
+                            <constraint firstItem="hGu-ao-eOZ" firstAttribute="centerY" secondItem="zMn-BI-82T" secondAttribute="centerY" id="4uy-M7-XcV"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="hGu-ao-eOZ" secondAttribute="trailing" constant="15" id="5IE-oU-lSe"/>
                             <constraint firstItem="gIq-VW-ant" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="15" id="DCX-Ny-Foj"/>
                             <constraint firstItem="zMn-BI-82T" firstAttribute="top" secondItem="ZRB-iL-JAc" secondAttribute="bottom" constant="15" id="EKH-NV-Xkg"/>
                             <constraint firstItem="Ub1-NK-pc8" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="EML-XM-2SC"/>
                             <constraint firstItem="ZRB-iL-JAc" firstAttribute="top" secondItem="5n1-em-hfE" secondAttribute="bottom" constant="15" id="K1F-zD-rd3"/>
-                            <constraint firstItem="zMn-BI-82T" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="KZx-N0-Vbg"/>
+                            <constraint firstItem="zMn-BI-82T" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="15" id="KZx-N0-Vbg"/>
                             <constraint firstItem="Rr1-41-p1g" firstAttribute="top" secondItem="gIq-VW-ant" secondAttribute="bottom" constant="15" id="Un9-Hu-4NU"/>
                             <constraint firstItem="dUN-Rg-Mvl" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="15" id="bRo-dn-eHr"/>
                             <constraint firstItem="5n1-em-hfE" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="15" id="cHB-BU-s3X"/>
@@ -190,6 +201,7 @@
                         <outlet property="outputSlider" destination="Ygj-mT-sUr" id="b5A-jA-hH6"/>
                         <outlet property="outputTimeLabel" destination="VgO-Dy-743" id="HLN-3R-jbi"/>
                         <outlet property="outputVideoView" destination="Ub1-NK-pc8" id="phs-4R-Xg7"/>
+                        <outlet property="recorderBtn" destination="hGu-ao-eOZ" id="eEQ-8v-qZi"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
