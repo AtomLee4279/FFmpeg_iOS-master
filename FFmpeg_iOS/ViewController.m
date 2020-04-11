@@ -255,7 +255,16 @@
 - (IBAction)actCombineVideoFromAudioRecorder:(id)sender {
     
     [self.recorderBtn setTitle:@"录音倒计时:10秒" forState:UIControlStateNormal];
-    [_recorder startRecording];
+    dispatch_queue_t queue = dispatch_get_main_queue();
+    dispatch_async(queue, ^{
+        // 追加任务1
+        [self->_recorder startRecording];
+    });
+    
+    dispatch_async(queue, ^{
+        // 追加任务2
+        [self.inputVideoPlayer play];
+    });
     Float64 seconds = 10;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(seconds * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [self->_recorder stopRecording];

@@ -253,8 +253,8 @@
 //设置AudioSession会话类别
 -(void)setAudioSessionCategory:(NSString *)category{
     NSError *sessionError;
+    [_session setCategory:category withOptions:AVAudioSessionCategoryOptionDefaultToSpeaker error:&sessionError];
 
-    [_session setCategory:category error:&sessionError];
     
     //启动音频会话管理
     if(_session==nil||sessionError){
