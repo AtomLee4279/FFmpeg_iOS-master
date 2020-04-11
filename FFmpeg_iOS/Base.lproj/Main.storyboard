@@ -110,8 +110,7 @@
                                 </constraints>
                                 <state key="normal" title="合成音频源"/>
                                 <connections>
-                                    <action selector="actCombineVedioAndAudio:" destination="BYZ-38-t0r" eventType="touchUpInside" id="rU4-Ck-3XR"/>
-                                    <action selector="actCombineVideoFromAudioRecorder:" destination="BYZ-38-t0r" eventType="touchUpInside" id="CDG-JY-o6z"/>
+                                    <action selector="actCombineVedioAndAudio:" destination="BYZ-38-t0r" eventType="touchUpInside" id="kmJ-Qe-bUM"/>
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="合成结果：" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dUN-Rg-Mvl" userLabel="outputTitleLabel">
@@ -164,6 +163,9 @@
                                     <constraint firstAttribute="width" constant="80" id="heF-Ow-CtC"/>
                                 </constraints>
                                 <state key="normal" title="录音后合成"/>
+                                <connections>
+                                    <action selector="actCombineVideoFromAudioRecorder:" destination="BYZ-38-t0r" eventType="touchUpInside" id="FOR-2E-Bcx"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -201,7 +203,6 @@
                         <outlet property="outputSlider" destination="Ygj-mT-sUr" id="b5A-jA-hH6"/>
                         <outlet property="outputTimeLabel" destination="VgO-Dy-743" id="HLN-3R-jbi"/>
                         <outlet property="outputVideoView" destination="Ub1-NK-pc8" id="phs-4R-Xg7"/>
-                        <outlet property="recorderBtn" destination="hGu-ao-eOZ" id="eEQ-8v-qZi"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

@@ -20,6 +20,8 @@
 	<string>1</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>访问麦克风</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>测试访问相册权限</string>
 	<key>UILaunchStoryboardName</key>

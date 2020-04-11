@@ -42,7 +42,7 @@
         //===============封装视频源的视频和音频轨道完毕===================//
         
         //6.初始化要合成的外界音频(例如人声)资源对象
-        AVURLAsset *voiceAsset = [[AVURLAsset alloc] initWithURL:[NSURL fileURLWithPath:audioPath] options:nil];
+        AVURLAsset *voiceAsset = [[AVURLAsset alloc] initWithURL:[NSURL URLWithString:audioPath] options:nil];
         //7.多轨道容器里添加一个新的音频轨道容器，用于装载外界音频轨道
         AVMutableCompositionTrack *voiceTrackContainer =
         [mixComposition addMutableTrackWithMediaType:AVMediaTypeAudio

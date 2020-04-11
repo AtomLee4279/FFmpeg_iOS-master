@@ -256,14 +256,9 @@
     
     [self.recorderBtn setTitle:@"录音倒计时:10秒" forState:UIControlStateNormal];
     [_recorder startRecording];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(10.f * NSEC_PER_SEC)), dispatch_get_global_queue(0, 0), ^{
+    Float64 seconds = 10;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(seconds * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [self->_recorder stopRecording];
-        //停止录音之后更新UI/合成到视频源等
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if (self->_recorder.recordURL) {
-                
-            }
-        });
     });
     
 }
@@ -455,6 +450,33 @@
     
     [self.inputVideoPlayer.currentItem seekToTime:kCMTimeZero];
     [self.outputVideoPlayer.currentItem seekToTime:kCMTimeZero];
+}
+ 
+#pragma mark - AudioRecorderDelegate -
+
+//录音结束(url为录音文件地址,isSuccess是否录音成功)
+-(void)recordFinishWithUrl:(NSString *)url isSuccess:(BOOL)isSuccess{
+    //url为得到的caf录音文件地址,可直接进行播放,也可进行转码为amr上传服务器
+    NSLog(@"录音完成,文件地址:%@",url);
+    if (url.length) {
+        NSString *videoPath = [[NSBundle mainBundle]pathForResource:INPUT_VIDEO ofType:nil];
+        //inTime表示想从视频第几秒合成录音音频
+        CMTime inTime = CMTimeMakeWithSeconds(5, 600);
+        CMTimeShow(inTime);
+        AVMutableComposition *mixComposition = [CombineAudioAndVideoTool combineOrginalVideo:videoPath WithAudio:url atTime:inTime];
+        [self outputProcessedVideoWithAsset:mixComposition];
+    }
+    return;
+    
+    //如果需要将得到的caf录音文件进行转码为amr格式,可按照以下步骤转码
+    //生成amr文件将要保存的路径
+    NSString *path = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
+    NSString *filePath = [path stringByAppendingPathComponent:@"CDPAudioFiles/CDPAudioRecord.amr"];
+    
+    //caf转码为amr格式
+    [CDPAudioRecorder convertCAFtoAMR:[NSURL URLWithString:url].path savePath:filePath];
+    
+    NSLog(@"转码amr格式成功----文件地址为:%@",filePath);
 }
 
 @end
