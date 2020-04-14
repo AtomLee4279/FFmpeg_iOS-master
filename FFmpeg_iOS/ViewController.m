@@ -15,6 +15,8 @@
 #import "CustomVideoBgView.h"
 #import "CDPAudioRecorder.h"
 #import "CombineAudioAndVideoTool.h"
+#import "NoiseReduction.h"
+
 
 #define INPUT_VIDEO @"input.mp4"
 
@@ -255,19 +257,22 @@
 - (IBAction)actCombineVideoFromAudioRecorder:(id)sender {
     
     [self.recorderBtn setTitle:@"录音倒计时:10秒" forState:UIControlStateNormal];
-    dispatch_queue_t queue = dispatch_get_main_queue();
-    dispatch_async(queue, ^{
-        // 追加任务1
-        [self->_recorder startRecording];
-    });
-    
-    dispatch_async(queue, ^{
-        // 追加任务2
-        [self.inputVideoPlayer play];
-    });
+//    dispatch_queue_t queue = dispatch_get_main_queue();
+//    dispatch_async(queue, ^{
+//        // 追加任务1
+//        [self->_recorder startRecording];
+//    });
+//
+//    dispatch_async(queue, ^{
+//        // 追加任务2
+//        [self.inputVideoPlayer play];
+//    });
+    [_recorder startRecording];
+    [self.inputVideoPlayer play];
     Float64 seconds = 10;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(seconds * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [self->_recorder stopRecording];
+//        [self->_recorder playAudioFile];
     });
     
 }
@@ -468,11 +473,27 @@
     //url为得到的caf录音文件地址,可直接进行播放,也可进行转码为amr上传服务器
     NSLog(@"录音完成,文件地址:%@",url);
     if (url.length) {
+        
+//        NSString *path = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
+//        NSString *amrFilePath = [path stringByAppendingPathComponent:@"CDPAudioFiles/CDPAudioRecord.amr"];
+//        //caf转AMR格式
+//        [CDPAudioRecorder convertCAFtoAMR:[NSURL URLWithString:url].path savePath:amrFilePath];
+//
+//        NSString *wavPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
+//        NSString *wavFilePath = [wavPath stringByAppendingPathComponent:@"CDPAudioFiles/CDPAudioRecord.wav"];
+        //amr转码为wav格式
+//        [CDPAudioRecorder convertAMRtoWAV:amrFilePath savePath:wavFilePath];
+        //对wav文件进行降噪
+//        [NoiseReduction noiseReduceFrom:wavFilePath to:wavFilePath];
+        //删除掉原音频文件和中间格式文件
+//        [_recorder deleteAudioFile];
+//        [_recorder deleteFileWithUrl:[NSURL fileURLWithPath:amrFilePath].absoluteString];
         NSString *videoPath = [[NSBundle mainBundle]pathForResource:INPUT_VIDEO ofType:nil];
         //inTime表示想从视频第几秒合成录音音频
         CMTime inTime = CMTimeMakeWithSeconds(5, 600);
         CMTimeShow(inTime);
-        AVMutableComposition *mixComposition = [CombineAudioAndVideoTool combineOrginalVideo:videoPath WithAudio:url atTime:inTime];
+        [NoiseReduction noiseReduceFrom:[NSURL URLWithString:url].path to:[NSURL URLWithString:url].path];
+        AVMutableComposition *mixComposition = [CombineAudioAndVideoTool combineOrginalVideo:videoPath WithAudio:url atTime:kCMTimeZero];
         [self outputProcessedVideoWithAsset:mixComposition];
     }
     return;

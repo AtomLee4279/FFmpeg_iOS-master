@@ -217,13 +217,13 @@
     //设置录音格式
     [settingDic setValue:[NSNumber numberWithInt:kAudioFormatLinearPCM] forKey:AVFormatIDKey];
     //设置录音采样率(Hz) 如：AVSampleRateKey==8000/44100/96000（影响音频的质量）
-    [settingDic setValue:[NSNumber numberWithFloat:8000] forKey:AVSampleRateKey];
+    [settingDic setValue:[NSNumber numberWithFloat:44100] forKey:AVSampleRateKey];
     //录音通道数  1 或 2
     [settingDic setValue:[NSNumber numberWithInt:1] forKey:AVNumberOfChannelsKey];
     //线性采样位数  8、16、24、32
     [settingDic setValue:[NSNumber numberWithInt:16] forKey:AVLinearPCMBitDepthKey];
     //录音的质量
-    [settingDic setValue:[NSNumber numberWithInt:AVAudioQualityMin] forKey:AVEncoderAudioQualityKey];
+    [settingDic setValue:[NSNumber numberWithInt:AVAudioQualityMax] forKey:AVEncoderAudioQualityKey];
     
     //录音文件最终地址
     _recordURL=[CDPAudioRecorder getAudioRecordFilePath];
@@ -254,8 +254,7 @@
 -(void)setAudioSessionCategory:(NSString *)category{
     NSError *sessionError;
     [_session setCategory:category withOptions:AVAudioSessionCategoryOptionDefaultToSpeaker error:&sessionError];
-
-    
+//    [_session setCategory:category error:&sessionError];
     //启动音频会话管理
     if(_session==nil||sessionError){
         DLog(@"CDPAudioRecorder设置AVAudioSession会话类别Category错误:%@",sessionError);
@@ -266,7 +265,7 @@
 //获得录音文件最终地址
 +(NSURL *)getAudioRecordFilePath{
     NSString *path = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
-    NSString *filePath = [path stringByAppendingPathComponent:@"CDPAudioFiles/CDPAudioRecord.caf"];
+    NSString *filePath = [path stringByAppendingPathComponent:@"CDPAudioFiles/CDPAudioRecord.wav"];
     
     //判断是否存在,不存在则创建
     NSFileManager *fileManager=[NSFileManager defaultManager];

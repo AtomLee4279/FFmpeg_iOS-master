@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		0400FCDC23B068B5002A8834 /* birth.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 0400FCDA23B05AB2002A8834 /* birth.m4a */; };
 		0400FCDF23B08354002A8834 /* CustomVideoBgView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0400FCDE23B08354002A8834 /* CustomVideoBgView.m */; };
+		67129F5124449E4700958CAE /* noise_suppression.c in Sources */ = {isa = PBXBuildFile; fileRef = 67129F5024449E4700958CAE /* noise_suppression.c */; };
+		67129F602444B92E00958CAE /* NoiseReduction.m in Sources */ = {isa = PBXBuildFile; fileRef = 67129F5F2444B92E00958CAE /* NoiseReduction.m */; };
 		67243FA3243F056B003FC93D /* input.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 675A3D4723CAB2B800450355 /* input.mp4 */; };
 		67243FB4243F2A7A003FC93D /* libopencore-amrwb.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 67243FAF243F2A7A003FC93D /* libopencore-amrwb.a */; };
 		67243FB5243F2A7A003FC93D /* libopencore-amrnb.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 67243FB0243F2A7A003FC93D /* libopencore-amrnb.a */; };
@@ -45,6 +47,12 @@
 		0400FCDA23B05AB2002A8834 /* birth.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = birth.m4a; sourceTree = "<group>"; };
 		0400FCDD23B08354002A8834 /* CustomVideoBgView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CustomVideoBgView.h; sourceTree = "<group>"; };
 		0400FCDE23B08354002A8834 /* CustomVideoBgView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CustomVideoBgView.m; sourceTree = "<group>"; };
+		67129F4D24449E4700958CAE /* timing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = timing.h; sourceTree = "<group>"; };
+		67129F4E24449E4700958CAE /* noise_suppression.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = noise_suppression.h; sourceTree = "<group>"; };
+		67129F4F24449E4700958CAE /* dr_wav.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dr_wav.h; sourceTree = "<group>"; };
+		67129F5024449E4700958CAE /* noise_suppression.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = noise_suppression.c; sourceTree = "<group>"; };
+		67129F5E2444B92D00958CAE /* NoiseReduction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NoiseReduction.h; sourceTree = "<group>"; };
+		67129F5F2444B92E00958CAE /* NoiseReduction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NoiseReduction.m; sourceTree = "<group>"; };
 		67243FA6243F2A7A003FC93D /* amrFileCodec.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = amrFileCodec.h; sourceTree = "<group>"; };
 		67243FA9243F2A7A003FC93D /* if_rom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = if_rom.h; sourceTree = "<group>"; };
 		67243FAA243F2A7A003FC93D /* dec_if.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dec_if.h; sourceTree = "<group>"; };
@@ -213,6 +221,29 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		67129F4B244461A900958CAE /* Tools */ = {
+			isa = PBXGroup;
+			children = (
+				67129F4C24449E4700958CAE /* SDK */,
+				67264F8F24415D150010694D /* CombineAudioAndVideoTool.h */,
+				67264F9024415D150010694D /* CombineAudioAndVideoTool.m */,
+				67129F5E2444B92D00958CAE /* NoiseReduction.h */,
+				67129F5F2444B92E00958CAE /* NoiseReduction.m */,
+			);
+			path = Tools;
+			sourceTree = "<group>";
+		};
+		67129F4C24449E4700958CAE /* SDK */ = {
+			isa = PBXGroup;
+			children = (
+				67129F4D24449E4700958CAE /* timing.h */,
+				67129F4E24449E4700958CAE /* noise_suppression.h */,
+				67129F4F24449E4700958CAE /* dr_wav.h */,
+				67129F5024449E4700958CAE /* noise_suppression.c */,
+			);
+			path = SDK;
+			sourceTree = "<group>";
+		};
 		67243FA4243F2A7A003FC93D /* CDPAudioRecorder */ = {
 			isa = PBXGroup;
 			children = (
@@ -309,8 +340,7 @@
 				67243FA4243F2A7A003FC93D /* CDPAudioRecorder */,
 				A65652DD21C524C3007C44B2 /* ViewController.h */,
 				A65652DE21C524C3007C44B2 /* ViewController.m */,
-				67264F8F24415D150010694D /* CombineAudioAndVideoTool.h */,
-				67264F9024415D150010694D /* CombineAudioAndVideoTool.m */,
+				67129F4B244461A900958CAE /* Tools */,
 				0400FCDD23B08354002A8834 /* CustomVideoBgView.h */,
 				0400FCDE23B08354002A8834 /* CustomVideoBgView.m */,
 				A65652E021C524C3007C44B2 /* Main.storyboard */,
@@ -598,11 +628,13 @@
 				A656548721C6069B007C44B2 /* ffmpeg_opt.c in Sources */,
 				A656548521C6069B007C44B2 /* cmdutils.c in Sources */,
 				67243FB6243F2A7A003FC93D /* amrFileCodec.m in Sources */,
+				67129F602444B92E00958CAE /* NoiseReduction.m in Sources */,
 				A656548621C6069B007C44B2 /* ffmpeg_filter.c in Sources */,
 				67243FB7243F2A7A003FC93D /* CDPAudioRecorder.m in Sources */,
 				A65652DF21C524C3007C44B2 /* ViewController.m in Sources */,
 				0400FCDF23B08354002A8834 /* CustomVideoBgView.m in Sources */,
 				A65652EA21C524C3007C44B2 /* main.m in Sources */,
+				67129F5124449E4700958CAE /* noise_suppression.c in Sources */,
 				A656548821C6069B007C44B2 /* ffmpeg.c in Sources */,
 				67264F9124415D150010694D /* CombineAudioAndVideoTool.m in Sources */,
 				A65652DC21C524C3007C44B2 /* AppDelegate.m in Sources */,
